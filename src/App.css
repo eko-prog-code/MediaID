@@ -138,15 +138,18 @@
 }
 
 /* Notification Popup styling */
+/* Styling untuk notification-popup */
 .notification-popup {
-  position: fixed;
-  bottom: 100px;
-  right: 20px;
+  position: fixed; /* Tetap di posisi yang sama bahkan saat scroll */
+  bottom: 100px;   /* Jarak dari bawah layar */
+  right: 20px;     /* Jarak dari tepi kanan layar */
   background-color: #fff;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 100;
+  z-index: 1001;   /* Agar tetap di atas elemen lainnya */
+  width: 250px;    /* Sesuaikan lebar popup */
+  font-family: Arial, sans-serif;
 }
 
 .notification-popup h2 {
@@ -159,4 +162,24 @@
   margin: 5px 0 0;
   font-size: 14px;
   color: #555;
+}
+
+/* Style for the notification bell */
+.notification-bell {
+  position: fixed; /* Ensure the bell stays in the same position even when scrolling */
+  bottom: 20px;    /* Distance from the bottom of the screen */
+  right: 20px;     /* Distance from the right edge of the screen */
+  background-color: #fff;
+  border: 2px solid #333;
+  padding: 10px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  font-size: 24px;
+  z-index: 1000;    /* Ensure it appears on top of other elements */
+  transition: background-color 0.3s ease;
+}
+
+.notification-bell:hover {
+  background-color: #f0f0f0; /* Slightly change background on hover */
 }
