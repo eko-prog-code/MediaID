@@ -136,3 +136,27 @@
     height: 40%; /* Adjust image height for smaller card */
   }
 }
+
+/* Notification Popup styling */
+.notification-popup {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.notification-popup h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.notification-popup p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #555;
+}
