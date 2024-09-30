@@ -157,15 +157,6 @@
   font-size: 24px;
 }
 
-.notification-bell {
-  outline: none; /* Menghilangkan outline biru */
-}
-
-.notification-bell:focus {
-  outline: none; /* Mencegah outline saat fokus */
-  box-shadow: none; /* Hilangkan bayangan atau garis lainnya */
-}
-
 .notification-count {
   background-color: red;
   color: white;
