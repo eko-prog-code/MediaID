@@ -146,7 +146,7 @@
   background-color: #fff;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(69, 37, 250, 0.986);
   z-index: 1001;   /* Agar tetap di atas elemen lainnya */
   width: 250px;    /* Sesuaikan lebar popup */
   font-family: Arial, sans-serif;
@@ -164,22 +164,46 @@
   color: #555;
 }
 
-/* Style for the notification bell */
 .notification-bell {
-  position: fixed; /* Ensure the bell stays in the same position even when scrolling */
-  bottom: 20px;    /* Distance from the bottom of the screen */
-  right: 20px;     /* Distance from the right edge of the screen */
-  background-color: #fff;
-  border: 2px solid #333;
-  padding: 10px;
-  border-radius: 50%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
   cursor: pointer;
   font-size: 24px;
-  z-index: 1000;    /* Ensure it appears on top of other elements */
-  transition: background-color 0.3s ease;
 }
 
-.notification-bell:hover {
-  background-color: #f0f0f0; /* Slightly change background on hover */
+.notification-count {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.notification-popup ul {
+  list-style: none;
+  padding: 0;
+}
+
+.notification-popup li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.notification-popup li.unread {
+  background-color: #f0f8ff;
+}
+
+.notification-popup button {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.notification-popup button:hover {
+  background-color: #0056b3;
 }

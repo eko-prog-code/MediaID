@@ -20,7 +20,9 @@ function App() {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [notification, setNotification] = useState({ title: '', body: '' });
+  const [notifications, setNotifications] = useState([]);  // To store notifications
+  const [unreadCount, setUnreadCount] = useState(0);  // To store unread notification count
+  const [showNotificationPopup, setShowNotificationPopup] = useState(false);  // To show/hide notification popup
 
   const cardContainerRef = useRef(null);
 
@@ -53,34 +55,46 @@ function App() {
     cardContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
   };
 
-  // Request permission for notifications on page load
+  // Request notification permission and listen for messages
   useEffect(() => {
     requestForToken();
 
     const unsubscribeMessageListener = onMessageListener()
       .then(payload => {
         console.log('Message received: ', payload);
-        setNotification({
-          title: payload.notification.title,
-          body: payload.notification.body,
-        });
+
+        // Save the new notification in state
+        setNotifications(prevNotifications => [
+          ...prevNotifications,
+          {
+            title: payload.notification.title,
+            body: payload.notification.body,
+            date: new Date().toLocaleString(),
+            read: false,  // Initially set as unread
+          },
+        ]);
+
+        // Increase unread count
+        setUnreadCount(prevCount => prevCount + 1);
       })
       .catch(err => console.log('failed: ', err));
 
     return () => unsubscribeMessageListener;
   }, []);
 
-  // Function to handle notification subscription manually (when clicking the bell)
-  const handleNotificationSubscription = async () => {
-    try {
-      const token = await requestForToken();
-      if (token) {
-        alert('You have subscribed to notifications!');
-      } else {
-        alert('Permission request denied or browser doesn’t support notifications.');
-      }
-    } catch (error) {
-      console.error("Failed to subscribe to notifications: ", error);
+  // Function to toggle notification popup
+  const toggleNotificationPopup = () => {
+    setShowNotificationPopup(!showNotificationPopup);
+
+    // When the popup is opened, mark all notifications as read
+    if (!showNotificationPopup) {
+      setUnreadCount(0);  // Reset unread count
+      setNotifications(prevNotifications =>
+        prevNotifications.map(notification => ({
+          ...notification,
+          read: true,
+        }))
+      );
     }
   };
 
@@ -122,16 +136,28 @@ function App() {
           <Route path="/read/:slug/:id" element={<Read currentUser={currentUser} />} />
         </Routes>
 
-        {/* Notification bell for manual subscription */}
-        <div className="notification-bell" onClick={handleNotificationSubscription}>
+        {/* Notification bell with unread count */}
+        <div className="notification-bell" onClick={toggleNotificationPopup}>
           🔔
+          {unreadCount > 0 && (
+            <span className="notification-count">{unreadCount}</span>  // Show count of unread notifications
+          )}
         </div>
 
-        {/* Display Notification Popup */}
-        {notification.title && (
+        {/* Notification popup */}
+        {showNotificationPopup && (
           <div className="notification-popup">
-            <h2>{notification.title}</h2>
-            <p>{notification.body}</p>
+            <h2>Notifications</h2>
+            <ul>
+              {notifications.map((notification, index) => (
+                <li key={index} className={notification.read ? 'read' : 'unread'}>
+                  <strong>{notification.title}</strong>
+                  <p>{notification.body}</p>
+                  <span>{notification.date}</span>
+                </li>
+              ))}
+            </ul>
+            <button onClick={toggleNotificationPopup}>Close</button>
           </div>
         )}
       </div>
