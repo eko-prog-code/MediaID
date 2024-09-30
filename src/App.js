@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -54,6 +53,7 @@ function App() {
     cardContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
   };
 
+  // Request permission for notifications on page load
   useEffect(() => {
     requestForToken();
 
@@ -73,8 +73,12 @@ function App() {
   // Function to handle notification subscription manually (when clicking the bell)
   const handleNotificationSubscription = async () => {
     try {
-      await requestForToken();
-      alert('You have subscribed to notifications!');
+      const token = await requestForToken();
+      if (token) {
+        alert('You have subscribed to notifications!');
+      } else {
+        alert('Permission request denied or browser doesn’t support notifications.');
+      }
     } catch (error) {
       console.error("Failed to subscribe to notifications: ", error);
     }
@@ -118,6 +122,7 @@ function App() {
           <Route path="/read/:slug/:id" element={<Read currentUser={currentUser} />} />
         </Routes>
 
+        {/* Notification bell for manual subscription */}
         <div className="notification-bell" onClick={handleNotificationSubscription}>
           🔔
         </div>
