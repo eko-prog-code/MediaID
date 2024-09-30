@@ -10,6 +10,7 @@ import Read from './pages/Read';
 import MovingCard from './components/MovingCard';
 import './App.css';
 import { requestForToken, onMessageListener } from './firebase';  // Import FCM functions
+import { getDatabase, ref, push } from "firebase/database";  // Import Firebase Database methods
 
 import MedicTechImage from './assets/MedicTech RME.png';
 import SinarRobusta from './assets/Sinar Robusta (1).png';
@@ -63,19 +64,27 @@ function App() {
       .then(payload => {
         console.log('Message received: ', payload);
 
-        // Save the new notification in state
+        const newNotification = {
+          title: payload.notification.title,
+          body: payload.notification.body,
+          date: new Date().toLocaleString(),
+          read: false,  // Initially set as unread
+        };
+
+        // Save the new notification in the local state
         setNotifications(prevNotifications => [
           ...prevNotifications,
-          {
-            title: payload.notification.title,
-            body: payload.notification.body,
-            date: new Date().toLocaleString(),
-            read: false,  // Initially set as unread
-          },
+          newNotification
         ]);
 
         // Increase unread count
         setUnreadCount(prevCount => prevCount + 1);
+
+        // Save the notification to Firebase Realtime Database
+        const db = getDatabase();
+        const notifRef = ref(db, 'SaveNotif');
+        push(notifRef, newNotification);  // Push the new notification to Firebase
+
       })
       .catch(err => console.log('failed: ', err));
 
@@ -149,13 +158,17 @@ function App() {
           <div className="notification-popup">
             <h2>Notifications</h2>
             <ul>
-              {notifications.map((notification, index) => (
-                <li key={index} className={notification.read ? 'read' : 'unread'}>
-                  <strong>{notification.title}</strong>
-                  <p>{notification.body}</p>
-                  <span>{notification.date}</span>
-                </li>
-              ))}
+              {notifications.length === 0 ? (
+                <li>No notifications</li>
+              ) : (
+                notifications.map((notification, index) => (
+                  <li key={index} className={notification.read ? 'read' : 'unread'}>
+                    <strong>{notification.title}</strong>
+                    <p>{notification.body}</p>
+                    <span>{notification.date}</span>
+                  </li>
+                ))
+              )}
             </ul>
             <button onClick={toggleNotificationPopup}>Close</button>
           </div>
