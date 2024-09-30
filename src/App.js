@@ -10,7 +10,7 @@ import Read from './pages/Read';
 import MovingCard from './components/MovingCard';
 import './App.css';
 import { requestForToken, onMessageListener } from './firebase';
-import { getDatabase, ref, set, onValue } from "firebase/database";  // Import Firebase Database methods
+import { getDatabase, ref, push, onValue } from "firebase/database";  // Import Firebase Database methods
 
 import MedicTechImage from './assets/MedicTech RME.png';
 import SinarRobusta from './assets/Sinar Robusta (1).png';
@@ -63,14 +63,14 @@ function App() {
 
     // Listen to changes in the Firebase notifications data
     onValue(notifRef, (snapshot) => {
-      const firebaseNotification = snapshot.val();
-      if (firebaseNotification) {
-        setNotifications([firebaseNotification]);  // Save the latest notification to state
+      const firebaseNotifications = snapshot.val();
+      if (firebaseNotifications) {
+        const notificationsArray = Object.values(firebaseNotifications);
+        setNotifications(notificationsArray);
 
-        // Calculate unread count (if the notification is not read)
-        if (!firebaseNotification.read) {
-          setUnreadCount(1);
-        }
+        // Calculate unread count (notifications that are not read)
+        const unreadNotifications = notificationsArray.filter(notification => !notification.read);
+        setUnreadCount(unreadNotifications.length);
       }
     }, (error) => {
       console.error("Error fetching notifications: ", error);
@@ -92,10 +92,10 @@ function App() {
           read: false,  // Initially mark as unread
         };
 
-        // Replace the existing notification in Firebase with the new one
+        // Save the new notification locally and in Firebase
         const db = getDatabase();
         const notifRef = ref(db, 'SaveNotif');  // Reference in the database
-        set(notifRef, newNotification)  // Replace the existing notification
+        push(notifRef, newNotification)  // Push to Firebase
           .then(() => {
             console.log('Notification saved to Firebase');
           })
@@ -114,24 +114,27 @@ function App() {
     setShowNotificationPopup(!showNotificationPopup);
 
     if (!showNotificationPopup) {
-      // Mark the current notification as read and update in Firebase
-      if (notifications.length > 0 && !notifications[0].read) {
-        const db = getDatabase();
-        const notifRef = ref(db, 'SaveNotif');
-        
-        // Update the current notification as read
-        const updatedNotification = { ...notifications[0], read: true };
-        set(notifRef, updatedNotification)
-          .then(() => {
-            console.log('Notification marked as read in Firebase');
-          })
-          .catch(error => {
+      // Mark notifications as read and update in Firebase
+      const db = getDatabase();
+      const notifRef = ref(db, 'SaveNotif');
+      const updatedNotifications = notifications.map(notification => ({
+        ...notification,
+        read: true,  // Mark as read
+      }));
+
+      // Update Firebase with read notifications
+      updatedNotifications.forEach(notification => {
+        const notifKey = notification.key;  // Assuming notification has a unique key
+        if (notifKey) {
+          const specificNotifRef = ref(db, `SaveNotif/${notifKey}`);
+          specificNotifRef.update({ read: true }).catch(error => {
             console.error("Error updating notification in Firebase: ", error);
           });
+        }
+      });
 
-        // Reset unread count locally
-        setUnreadCount(0);
-      }
+      // Reset unread count locally
+      setUnreadCount(0);
     }
   };
 
