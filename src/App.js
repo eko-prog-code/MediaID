@@ -10,7 +10,7 @@ import Read from './pages/Read';
 import MovingCard from './components/MovingCard';
 import './App.css';
 import { requestForToken, onMessageListener } from './firebase';
-import { getDatabase, ref, push, onValue } from "firebase/database";  // Import Firebase Database methods
+import { getDatabase, ref, push, onValue, update } from 'firebase/database';
 
 import MedicTechImage from './assets/MedicTech RME.png';
 import SinarRobusta from './assets/Sinar Robusta (1).png';
@@ -27,6 +27,7 @@ function App() {
 
   const cardContainerRef = useRef(null);
 
+  // Fetch news data
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -35,19 +36,21 @@ function App() {
         setNews(newsArray);
         setFilteredNews(newsArray);
       } catch (error) {
-        console.error("Error fetching news: ", error);
+        console.error('Error fetching news: ', error);
       }
     };
     fetchNews();
   }, []);
 
+  // Auth listener
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
     });
     return () => unsubscribe();
   }, []);
 
+  // Scroll functionality for cards
   const scrollLeft = () => {
     cardContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
   };
@@ -56,85 +59,105 @@ function App() {
     cardContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
   };
 
-  // Firebase notification fetch & listener
+  // Fetch notifications from Firebase for the current user, or show placeholder if user is not logged in
   useEffect(() => {
-    const db = getDatabase();
-    const notifRef = ref(db, 'SaveNotif');  // Reference to notifications in the database
+    if (currentUser) {
+      const db = getDatabase();
+      const userId = currentUser.uid;
+      const notifRef = ref(db, `users/${userId}/notifications`);
 
-    // Listen to changes in the Firebase notifications data
-    onValue(notifRef, (snapshot) => {
-      const firebaseNotifications = snapshot.val();
-      if (firebaseNotifications) {
-        const notificationsArray = Object.values(firebaseNotifications);
-        setNotifications(notificationsArray);
+      onValue(
+        notifRef,
+        (snapshot) => {
+          const firebaseNotifications = snapshot.val();
+          if (firebaseNotifications) {
+            const notificationsArray = Object.keys(firebaseNotifications).map((key) => ({
+              id: key,
+              ...firebaseNotifications[key],
+            }));
+            setNotifications(notificationsArray);
 
-        // Calculate unread count (notifications that are not read)
-        const unreadNotifications = notificationsArray.filter(notification => !notification.read);
-        setUnreadCount(unreadNotifications.length);
-      }
-    }, (error) => {
-      console.error("Error fetching notifications: ", error);
-    });
-  }, []);
+            const unreadNotifications = notificationsArray.filter((notification) => !notification.read);
+            setUnreadCount(unreadNotifications.length);
+          }
+        },
+        (error) => {
+          console.error('Error fetching notifications: ', error);
+        }
+      );
+    } else {
+      // Placeholder notifications for users not logged in
+      const placeholderNotification = {
+        id: 'placeholder',
+        title: 'Welcome!',
+        body: 'Login to view your notifications.',
+        date: new Date().toLocaleString(),
+        read: false,  // Always show as unread
+      };
 
-  // Request notification permission and listen for incoming FCM messages
+      setNotifications([placeholderNotification]);
+      setUnreadCount(1);  // Always show 1 unread notification
+    }
+  }, [currentUser]);
+
+  // Request notification permission and listen for FCM messages
   useEffect(() => {
     requestForToken();
 
     const unsubscribeMessageListener = onMessageListener()
-      .then(payload => {
+      .then((payload) => {
         console.log('Message received: ', payload);
 
         const newNotification = {
           title: payload.notification.title,
           body: payload.notification.body,
           date: new Date().toLocaleString(),
-          read: false,  // Initially mark as unread
+          read: false, // Initially mark as unread
         };
 
-        // Save the new notification locally and in Firebase
-        const db = getDatabase();
-        const notifRef = ref(db, 'SaveNotif');  // Reference in the database
-        push(notifRef, newNotification)  // Push to Firebase
-          .then(() => {
-            console.log('Notification saved to Firebase');
-          })
-          .catch(error => {
-            console.error("Error saving notification to Firebase: ", error);
-          });
-
+        if (currentUser) {
+          const db = getDatabase();
+          const userId = currentUser.uid;
+          const notifRef = ref(db, `users/${userId}/notifications`);
+          push(notifRef, newNotification)
+            .then(() => {
+              console.log('Notification saved to Firebase');
+            })
+            .catch((error) => {
+              console.error('Error saving notification to Firebase: ', error);
+            });
+        }
       })
-      .catch(err => console.log('Failed to get message: ', err));
+      .catch((err) => console.log('Failed to get message: ', err));
 
     return () => unsubscribeMessageListener;
-  }, []);
+  }, [currentUser]);
 
-  // Toggle the notification popup and mark notifications as read
+  // Toggle notification popup and mark notifications as read
   const toggleNotificationPopup = () => {
     setShowNotificationPopup(!showNotificationPopup);
 
-    if (!showNotificationPopup) {
-      // Mark notifications as read and update in Firebase
+    if (!showNotificationPopup && currentUser) {
       const db = getDatabase();
-      const notifRef = ref(db, 'SaveNotif');
-      const updatedNotifications = notifications.map(notification => ({
-        ...notification,
-        read: true,  // Mark as read
-      }));
+      const userId = currentUser.uid;
 
-      // Update Firebase with read notifications
-      updatedNotifications.forEach(notification => {
-        const notifKey = notification.key;  // Assuming notification has a unique key
-        if (notifKey) {
-          const specificNotifRef = ref(db, `SaveNotif/${notifKey}`);
-          specificNotifRef.update({ read: true }).catch(error => {
-            console.error("Error updating notification in Firebase: ", error);
-          });
+      notifications.forEach((notification) => {
+        if (!notification.read) {
+          const specificNotifRef = ref(db, `users/${userId}/notifications/${notification.id}`);
+
+          update(specificNotifRef, {
+            read: true,
+          })
+            .then(() => {
+              console.log(`Notification ${notification.id} marked as read`);
+            })
+            .catch((error) => {
+              console.error('Error updating notification: ', error);
+            });
         }
       });
 
-      // Reset unread count locally
-      setUnreadCount(0);
+      setUnreadCount(0);  // Reset unread count locally
     }
   };
 
@@ -147,22 +170,10 @@ function App() {
             &#10094;
           </button>
           <div className="moving-card-container" ref={cardContainerRef}>
-            <MovingCard 
-              imageUrl={MedicTechImage} 
-              redirectUrl="https://play.google.com/store/apps/details?id=com.medictech&hl=id&pli=1" 
-            />
-            <MovingCard 
-              imageUrl={SinarRobusta} 
-              redirectUrl="https://cek-harga-kopi.vercel.app/" 
-            />
-            <MovingCard 
-              imageUrl={EbookStore} 
-              redirectUrl="https://ebookstore-id.vercel.app/" 
-            />
-            <MovingCard 
-              imageUrl={SellYourSongsImage} 
-              redirectUrl="https://sell-your-songs.vercel.app/" 
-            />
+            <MovingCard imageUrl={MedicTechImage} redirectUrl="https://play.google.com/store/apps/details?id=com.medictech&hl=id&pli=1" />
+            <MovingCard imageUrl={SinarRobusta} redirectUrl="https://cek-harga-kopi.vercel.app/" />
+            <MovingCard imageUrl={EbookStore} redirectUrl="https://ebookstore-id.vercel.app/" />
+            <MovingCard imageUrl={SellYourSongsImage} redirectUrl="https://sell-your-songs.vercel.app/" />
           </div>
           <button className="scroll-arrow right-arrow" onClick={scrollRight}>
             &#10095;
@@ -179,9 +190,7 @@ function App() {
         {/* Notification bell with unread count */}
         <div className="notification-bell" onClick={toggleNotificationPopup}>
           🔔
-          {unreadCount > 0 && (
-            <span className="notification-count">{unreadCount}</span>  // Show count of unread notifications
-          )}
+          {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
         </div>
 
         {/* Notification popup */}
@@ -192,8 +201,8 @@ function App() {
               {notifications.length === 0 ? (
                 <li>No notifications</li>
               ) : (
-                notifications.map((notification, index) => (
-                  <li key={index} className={notification.read ? 'read' : 'unread'}>
+                notifications.map((notification) => (
+                  <li key={notification.id} className={notification.read ? 'read' : 'unread'}>
                     <strong>{notification.title}</strong>
                     <p>{notification.body}</p>
                     <span>{notification.date}</span>

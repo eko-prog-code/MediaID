@@ -1,7 +1,5 @@
-// public/service-worker.js
-
-importScripts('https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/9.0.2/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js');
 
 firebase.initializeApp({
     apiKey: "AIzaSyA5CQL9a1ojhNnIRsG8SoSUphPmLezrsOQ",
@@ -14,7 +12,6 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Handle background messages
 messaging.onBackgroundMessage((payload) => {
   const title = payload.notification.title;
   const options = {
