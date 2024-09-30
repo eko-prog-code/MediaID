@@ -1,0 +1,168 @@
+/* Container untuk card berita */
+.news-card {
+    border: 1px solid #ddd; /* Border tipis */
+    border-radius: 8px; /* Membuat sudut card membulat */
+    overflow: hidden; /* Mencegah konten overflow */
+    display: flex;
+    flex-direction: column;
+    margin: 16px; /* Memberikan jarak antar card */
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Menambahkan bayangan */
+    transition: transform 0.3s ease; /* Animasi saat hover */
+    height: 100%; /* Tinggi fleksibel agar mengikuti konten */
+  }
+  
+  /* Efek hover pada card */
+  .news-card:hover {
+    transform: translateY(-5px); /* Sedikit naik ke atas saat dihover */
+  }
+  
+  /* Gambar di dalam card */
+  .news-image {
+    width: 100%;
+    height: 180px; /* Menetapkan tinggi tetap untuk gambar */
+    object-fit: cover; /* Memastikan gambar tetap proporsional */
+  }
+  
+  /* Konten berita */
+  .news-content {
+    padding: 16px;
+    flex-grow: 1; /* Membuat konten memenuhi ruang yang tersisa */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  /* Judul berita */
+  .news-content h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: justify;
+    max-height: 70px; /* Membatasi tinggi judul */
+    overflow: hidden; /* Memotong teks berlebih */
+    line-height: 1.4;
+  }
+  
+  /* Garis pemisah */
+  .divider {
+    width: 100%;
+    height: 2px;
+    background-color: rgba(0, 0, 255, 0.2); /* Garis biru transparan */
+    margin: 10px 0;
+  }
+  
+/* Ringkasan berita */
+.news-content p {
+    font-size: 1rem;
+    color: #555;
+    text-align: justify;
+    max-height: 130px; /* Meningkatkan tinggi maksimal untuk summary */
+    overflow: hidden; /* Memotong teks berlebih */
+    line-height: 1.6;
+  }
+  
+  
+  /* Tanggal berita */
+  .news-date {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 10px;
+    text-align: right; /* Menyelaraskan tanggal ke kanan */
+  }
+  
+  /* Tombol Baca */
+  .read-button {
+    background-color: #28a745; /* Warna hijau */
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-start; /* Menyelaraskan tombol ke kiri */
+    transition: background-color 0.3s ease;
+    margin-top: 20px; /* Jarak dari konten sebelumnya */
+  }
+  
+  /* Efek hover pada tombol Baca */
+  .read-button:hover {
+    background-color: #218838; /* Hijau lebih gelap saat hover */
+  }
+  
+  /* Media queries untuk responsif */
+  @media (max-width: 768px) {
+    .news-card {
+      margin: 12px; /* Mengurangi margin pada layar kecil */
+    }
+  
+    .news-content h3 {
+      font-size: 16px; /* Mengurangi ukuran font judul di layar kecil */
+    }
+  
+    .news-content p {
+      font-size: 0.9rem; /* Mengurangi ukuran font summary */
+    }
+  
+    .read-button {
+      padding: 8px 16px; /* Ukuran tombol lebih kecil */
+      font-size: 0.9rem;
+    }
+  }
+  
+
+  /* Add this to your NewsCard.css */
+
+/* Container untuk footer card berita */
+.footer {
+    display: flex;
+    justify-content: space-between; /* Memposisikan item di kiri dan kanan */
+    align-items: center; /* Menyelaraskan secara vertikal */
+    margin-top: 10px; /* Jarak dari konten sebelumnya */
+}
+
+/* Tanggal berita */
+.news-date {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0; /* Menghapus margin untuk footer */
+    text-align: left; /* Menyelaraskan tanggal ke kiri */
+}
+
+/* Tombol Baca */
+.read-button {
+    background-color: #28a745; /* Warna hijau */
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Efek hover pada tombol Baca */
+.read-button:hover {
+    background-color: #218838; /* Hijau lebih gelap saat hover */
+}
+
+/* Media queries untuk responsif */
+@media (max-width: 768px) {
+    .news-card {
+        margin: 12px; /* Mengurangi margin pada layar kecil */
+    }
+  
+    .news-content h3 {
+        font-size: 16px; /* Mengurangi ukuran font judul di layar kecil */
+    }
+  
+    .news-content p {
+        font-size: 0.9rem; /* Mengurangi ukuran font summary */
+    }
+  
+    .read-button {
+        padding: 8px 16px; /* Ukuran tombol lebih kecil */
+        font-size: 0.9rem;
+    }
+}

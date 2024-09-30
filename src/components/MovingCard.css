@@ -1,0 +1,39 @@
+/* Container untuk card */
+.moving-card-container-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    margin: 20px 0;
+    justify-content: center;
+    overflow: hidden; /* Agar card yang keluar dari layar disembunyikan */
+  }
+  
+  .moving-card-container {
+    display: flex;
+    overflow-x: auto; /* Tambahkan scroll secara horizontal */
+    white-space: nowrap; /* Membuat card tetap dalam satu baris */
+    scroll-behavior: smooth;
+    padding: 10px;
+    max-width: 100%; /* Batasi lebar container sesuai dengan lebar layar */
+    height: 85px; /* Batasi tinggi container sesuai dengan tinggi card */
+  }
+  
+  .moving-card-container::-webkit-scrollbar {
+    display: none; /* Hilangkan scrollbar default */
+  }
+  
+  /* Styling card */
+  .moving-card {
+    width: 275px; /* Lebar tetap pada 275px, termasuk di mobile */
+    height: 85px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-right: 10px; /* Jarak antar-card */
+  }
+  

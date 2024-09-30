@@ -1,0 +1,156 @@
+/* Home container */
+.home {
+    padding: 20px;
+    max-width: 1200px; /* Set max width for better view on large screens */
+    margin: 0 auto; /* Center the home content */
+}
+
+/* Title */
+.home h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+/* Search input */
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+/* Wrapper untuk kategori */
+.category-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center horizontally */
+    margin: 20px 0;
+    overflow-x: hidden; /* Hide overflow to keep it clean */
+}
+
+/* Kontainer untuk kategori, tambahkan padding dan atur lebar maksimal */
+.category-container {
+    display: flex;
+    max-width: 100%; /* Agar fleksibel di semua ukuran layar */
+    width: 100%;
+    overflow-x: auto; /* Scroll horizontal jika kategori melebihi lebar */
+    scrollbar-width: thin; /* Scroll tipis di Firefox */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling di iOS */
+    padding: 10px 0; /* Tambahkan padding untuk lebih rapi */
+}
+
+/* Setel padding dan margin kategori */
+.category-card {
+    padding: 10px 20px;
+    margin: 0 5px; /* Kurangi margin antar kartu kategori */
+    background-color: #f5f5f5;
+    cursor: pointer;
+    border-radius: 8px;
+    white-space: nowrap; /* Agar teks tidak terpotong */
+    transition: background-color 0.3s;
+    flex-shrink: 0; /* Pastikan kartu tidak mengecil */
+}
+
+/* Hover effect */
+.category-card:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.category-card.active {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Tombol untuk scroll kiri dan kanan */
+.scroll-button {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scroll-button.left {
+    margin-right: 10px;
+}
+
+.scroll-button.right {
+    margin-left: 10px;
+}
+
+/* Responsivitas */
+@media (max-width: 768px) {
+    .category-wrapper {
+        padding: 10px; /* Lebih sedikit padding untuk mobile */
+    }
+
+    .category-card {
+        padding: 8px 15px; /* Kurangi padding di kategori untuk mobile */
+        font-size: 14px;
+    }
+}
+
+/* Tombol untuk scroll kiri dan kanan */
+.scroll-button {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Arrow buttons for mobile with emboss effect */
+@media (max-width: 768px) {
+    .scroll-button {
+        background-color: #6510ee; /* Light background */
+        border-radius: 50%; /* Make the button circular */
+        padding: 10px; /* Add padding for the circular shape */
+        width: 40px; /* Set width for a smaller button */
+        height: 40px; /* Set height for a smaller button */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255, 255, 255, 0.5); /* Emboss effect */
+        font-size: 18px; /* Smaller arrow size */
+        border: 1px solid #ccc; /* Optional border for definition */
+        transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover transition */
+    }
+
+    .scroll-button:hover {
+        background-color: #e0e0e0; /* Slightly darker on hover */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover */
+    }
+
+    /* Margin adjustments */
+    .scroll-button.left {
+        margin-right: 5px;
+    }
+
+    .scroll-button.right {
+        margin-left: 5px;
+    }
+}
+
+.loading-container {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.loading-image {
+    width: 150px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}

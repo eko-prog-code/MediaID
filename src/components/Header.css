@@ -1,0 +1,148 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px; /* Adjusted for more spacing */
+    background-color: #903dfd; /* Dark purple for an elegant look */
+    color: #fff;
+    border-bottom: 2px solid #ecf0f1;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 80px; /* Set fixed height */
+    box-sizing: border-box; /* Ensure padding doesn't overflow height */
+}
+
+.header-left {
+    flex: 1;
+    display: flex;
+    align-items: center; /* Center vertically */
+}
+
+.logo {
+    max-width: 60px; /* Fixed logo width */
+    height: 60px; /* Fixed logo height */
+    margin-right: 10px; /* Space between logo and text */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+/* Header Center: Categories */
+.header-center {
+    flex: 2;
+    display: block;
+    text-align: center;
+}
+
+/* Right-side items: Search and Links */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-link {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.header-link:hover {
+    background-color: #34495e;
+}
+
+/* Media query for mobile */
+@media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      padding: 10px;
+      height: auto; /* Allow flexibility on mobile */
+    }
+
+    .header-center {
+      width: 100%;
+      order: 2;
+    }
+
+    .header-right {
+      order: 3;
+    }
+
+    .logo {
+      margin-bottom: 10px;
+    }
+}
+
+/* Desktop adjustments */
+@media (min-width: 769px) {
+    .header-center {
+      display: flex;
+      justify-content: center;
+    }
+
+    .header-right {
+      justify-content: flex-end;
+      flex: 1;
+    }
+}
+
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative; /* To position the dropdown */
+}
+
+.toggle-button {
+  font-size: 24px; /* Increase size for better visibility */
+}
+
+.menu-links {
+  display: flex;
+  flex-direction: column; /* Stack links vertically */
+  position: absolute; /* Positioning it absolutely */
+  top: 100%; /* Position below the toggle button */
+  right: 0; /* Align right */
+  background-color: #903dfd; /* Match background color */
+  border-radius: 5px; /* Rounded corners */
+  z-index: 999; /* Ensure it appears above other elements */
+}
+
+.menu-links .header-link {
+  padding: 10px 15px; /* Spacing for the links */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Separator between links */
+}
+
+.menu-links .header-link:last-child {
+  border-bottom: none; /* Remove bottom border for the last link */
+}
+
+/* Media query for mobile */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 10px;
+    height: auto; /* Allow flexibility on mobile */
+  }
+
+  .header-left {
+    width: 100%;
+    order: 1;
+  }
+
+  .header-right {
+    order: 2;
+  }
+
+  .logo {
+    margin-bottom: 10px;
+  }
+}

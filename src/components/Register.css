@@ -1,0 +1,121 @@
+/* Register.css */
+.register-container {
+    width: 400px; /* Width for larger screens */
+    margin: auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  h2 {
+    color: #333;
+    margin-bottom: 25px;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-sizing: border-box; /* Ensures padding and width work well */
+  }
+  
+  input[type="text"]::placeholder,
+  input[type="email"]::placeholder,
+  input[type="password"]::placeholder {
+    color: #999;
+    padding-left: 10px;
+    width: 80%; /* Placeholder width set to 80% */
+    display: inline-block;
+  }
+  
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #fff;
+  }
+  
+  button {
+    background-color: #28a745;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 10;
+  }
+  
+  .loading-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  /* Container for form input fields and submit button, styled as a rectangle */
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  /* Mobile styles */
+  @media (max-width: 480px) {
+    .register-container {
+      width: 80%; /* Full width on mobile */
+      padding: 20px;
+    }
+  
+    h2 {
+      font-size: 24px; /* Slightly smaller heading */
+    }
+  
+    button {
+      padding: 12px; /* Adjust button padding */
+      font-size: 14px; /* Smaller font size on mobile */
+    }
+  
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      padding: 10px; /* Adjust padding for input fields */
+    }
+  }
+  

@@ -1,0 +1,15 @@
+.news-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 cards per row on desktop */
+    gap: 16px; /* Gap between cards */
+    margin-bottom: 30px;
+}
+
+/* Media query for mobile view */
+@media (max-width: 768px) {
+    .news-list {
+        grid-template-columns: 1fr; /* 1 card per row on mobile */
+    }
+}
+
+/* Additional styles for responsive design can be added here */

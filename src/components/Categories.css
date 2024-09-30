@@ -1,0 +1,79 @@
+.categories {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px; /* Kurangi padding untuk mengurangi ketinggian */
+    background-color: #34495e;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.categories ul {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    overflow-x: auto;
+}
+
+.category-item {
+    cursor: pointer;
+    padding: 10px 15px; /* Kurangi padding untuk kategori */
+    background-color: #2ecc71;
+    color: #fff;
+    border-radius: 20px; /* Kurangi radius untuk ukuran lebih kecil */
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-right: 6px;
+}
+
+.category-item:hover {
+    background-color: #27ae60;
+    transform: translateY(-5px);
+}
+
+.category-item:active {
+    transform: translateY(0);
+}
+
+/* Scroll bar customization for mobile */
+@media (max-width: 768px) {
+    .categories {
+        justify-content: flex-start;
+        padding: 5px; /* Kurangi padding lebih jauh di mobile */
+    }
+
+    .category-item {
+        flex: 0 0 auto;
+        padding: 8px 12px; /* Kurangi padding untuk tampilan mobile */
+        font-size: 0.85rem; /* Kurangi ukuran font */
+    }
+
+    /* Scrollbar */
+    .categories ul {
+        scrollbar-width: thin;
+        scrollbar-color: #2ecc71 #ecf0f1;
+    }
+
+    .categories ul::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .categories ul::-webkit-scrollbar-thumb {
+        background-color: #2ecc71;
+        border-radius: 10px;
+    }
+}
+
+/* For desktop */
+@media (min-width: 769px) {
+    .categories {
+        justify-content: center;
+    }
+
+    .category-item {
+        font-size: 1.2rem;
+    }
+}

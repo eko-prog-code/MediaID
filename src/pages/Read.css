@@ -1,0 +1,143 @@
+/* src/components/Read.css */
+.read-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.news-title {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: justify;
+}
+
+.news-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.news-date {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.news-content {
+    font-size: 1em;
+    line-height: 1.6;
+    color: #333;
+}
+
+.share-button {
+    background-color: #28a745; /* Hijau */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 40px;
+}
+
+.share-button:hover {
+    background-color: #218838; /* Warna hijau yang lebih gelap */
+}
+
+.share-message {
+    margin-top: 10px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.news-summary {
+    font-size: 1.1em;
+    margin: 15px 0;
+    color: #444;
+    line-height: 1.5; /* Memberikan jarak antar garis */
+    text-align: justify;
+}
+
+.news-summary span {
+    display: block; /* Memastikan setiap span tampil dalam baris baru */
+    margin-bottom: 10px; /* Jarak bawah antara ringkasan */
+}
+
+.Toastify__toast {
+    border-radius: 8px;
+    font-size: 1.1em;
+    margin: 10px;
+}
+
+.Toastify__toast--success {
+    background: #fffbfe; /* Ganti warna latar belakang */
+    color: rgb(14, 15, 15);
+}
+
+/* src/pages/Read.css */
+.comments-section {
+    margin-top: 20px;
+  }
+  
+  .comment {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+  }
+  
+  .comment-date {
+    font-size: 0.8em;
+    color: #888;
+  }
+  
+  .modal-sheet-content {
+    padding: 20px;
+  }
+  
+  .modal-sheet-content textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+  
+  .video-container {
+    position: relative;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    margin: 20px 0; /* Add some margin for spacing */
+}
+
+.react-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.loading-image {
+    width: 150px;
+    height: auto;
+    animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
