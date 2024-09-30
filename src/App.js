@@ -9,8 +9,8 @@ import Register from './components/Register';
 import Read from './pages/Read';
 import MovingCard from './components/MovingCard';
 import './App.css';
-import { requestForToken, onMessageListener } from './firebase';
-import { getDatabase, ref, push, onValue } from "firebase/database";  // Import Firebase Database methods
+import { requestForToken, onMessageListener } from './firebase';  // Import FCM functions
+import { getDatabase, ref, push } from "firebase/database";  // Import Firebase Database methods
 
 import MedicTechImage from './assets/MedicTech RME.png';
 import SinarRobusta from './assets/Sinar Robusta (1).png';
@@ -21,9 +21,9 @@ function App() {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [notifications, setNotifications] = useState([]);  // Notifications state
-  const [unreadCount, setUnreadCount] = useState(0);  // Unread notification count
-  const [showNotificationPopup, setShowNotificationPopup] = useState(false);  // Popup state
+  const [notifications, setNotifications] = useState([]);  // To store notifications
+  const [unreadCount, setUnreadCount] = useState(0);  // To store unread notification count
+  const [showNotificationPopup, setShowNotificationPopup] = useState(false);  // To show/hide notification popup
 
   const cardContainerRef = useRef(null);
 
@@ -56,28 +56,7 @@ function App() {
     cardContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
   };
 
-  // Firebase notification fetch & listener
-  useEffect(() => {
-    const db = getDatabase();
-    const notifRef = ref(db, 'SaveNotif');  // Reference to notifications in the database
-
-    // Listen to changes in the Firebase notifications data
-    onValue(notifRef, (snapshot) => {
-      const firebaseNotifications = snapshot.val();
-      if (firebaseNotifications) {
-        const notificationsArray = Object.values(firebaseNotifications);
-        setNotifications(notificationsArray);
-
-        // Calculate unread count (notifications that are not read)
-        const unreadNotifications = notificationsArray.filter(notification => !notification.read);
-        setUnreadCount(unreadNotifications.length);
-      }
-    }, (error) => {
-      console.error("Error fetching notifications: ", error);
-    });
-  }, []);
-
-  // Request notification permission and listen for incoming FCM messages
+  // Request notification permission and listen for messages
   useEffect(() => {
     requestForToken();
 
@@ -89,52 +68,42 @@ function App() {
           title: payload.notification.title,
           body: payload.notification.body,
           date: new Date().toLocaleString(),
-          read: false,  // Initially mark as unread
+          read: false,  // Initially set as unread
         };
 
-        // Save the new notification locally and in Firebase
+        // Save the new notification in the local state
+        setNotifications(prevNotifications => [
+          ...prevNotifications,
+          newNotification
+        ]);
+
+        // Increase unread count
+        setUnreadCount(prevCount => prevCount + 1);
+
+        // Save the notification to Firebase Realtime Database
         const db = getDatabase();
-        const notifRef = ref(db, 'SaveNotif');  // Reference in the database
-        push(notifRef, newNotification)  // Push to Firebase
-          .then(() => {
-            console.log('Notification saved to Firebase');
-          })
-          .catch(error => {
-            console.error("Error saving notification to Firebase: ", error);
-          });
+        const notifRef = ref(db, 'SaveNotif');
+        push(notifRef, newNotification);  // Push the new notification to Firebase
 
       })
-      .catch(err => console.log('Failed to get message: ', err));
+      .catch(err => console.log('failed: ', err));
 
     return () => unsubscribeMessageListener;
   }, []);
 
-  // Toggle the notification popup and mark notifications as read
+  // Function to toggle notification popup
   const toggleNotificationPopup = () => {
     setShowNotificationPopup(!showNotificationPopup);
 
+    // When the popup is opened, mark all notifications as read
     if (!showNotificationPopup) {
-      // Mark notifications as read and update in Firebase
-      const db = getDatabase();
-      const notifRef = ref(db, 'SaveNotif');
-      const updatedNotifications = notifications.map(notification => ({
-        ...notification,
-        read: true,  // Mark as read
-      }));
-
-      // Update Firebase with read notifications
-      updatedNotifications.forEach(notification => {
-        const notifKey = notification.key;  // Assuming notification has a unique key
-        if (notifKey) {
-          const specificNotifRef = ref(db, `SaveNotif/${notifKey}`);
-          specificNotifRef.update({ read: true }).catch(error => {
-            console.error("Error updating notification in Firebase: ", error);
-          });
-        }
-      });
-
-      // Reset unread count locally
-      setUnreadCount(0);
+      setUnreadCount(0);  // Reset unread count
+      setNotifications(prevNotifications =>
+        prevNotifications.map(notification => ({
+          ...notification,
+          read: true,
+        }))
+      );
     }
   };
 
