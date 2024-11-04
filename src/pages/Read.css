@@ -141,3 +141,45 @@
     }
 }
 
+.ads-container {
+    position: fixed;
+    bottom: -160px; /* Mulai dari luar layar untuk animasi */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 420px; /* Lebar tetap pada layar desktop */
+    height: 160px; /* Tinggi tetap pada layar desktop */
+    animation: slide-up 10s ease-in-out infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.ads-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Media Query untuk Mobile Devices */
+@media (max-width: 768px) {
+    .ads-container {
+        width: 95vw; /* Lebar responsif pada mobile */
+        height: auto;
+        max-width: 500px; /* Lebar maksimum di perangkat mobile */
+        aspect-ratio: 1200 / 520; /* Menjaga rasio aspek */
+        bottom: -150px; /* Mengatur agar muncul lebih tinggi di layar kecil */
+    }
+}
+
+/* Animasi slide-up */
+@keyframes slide-up {
+    0%, 60% {
+        transform: translateY(0) translateX(-50%);
+    }
+    60%, 100% {
+        transform: translateY(-100%) translateX(-50%);
+    }
+}

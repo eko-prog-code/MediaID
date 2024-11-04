@@ -21,9 +21,9 @@ function App() {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [notifications, setNotifications] = useState([]);  // Notifications state
-  const [unreadCount, setUnreadCount] = useState(0);  // Unread notification count
-  const [showNotificationPopup, setShowNotificationPopup] = useState(false);  // Popup state
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotificationPopup, setShowNotificationPopup] = useState(false);
 
   const cardContainerRef = useRef(null);
 
@@ -86,17 +86,17 @@ function App() {
         }
       );
     } else {
-      // Placeholder notifications for users not logged in
+      // Placeholder notification for users not logged in
       const placeholderNotification = {
         id: 'placeholder',
         title: 'Welcome!',
         body: 'Login to view your notifications.',
         date: new Date().toLocaleString(),
-        read: false,  // Always show as unread
+        read: false,
       };
 
       setNotifications([placeholderNotification]);
-      setUnreadCount(1);  // Always show 1 unread notification
+      setUnreadCount(1);
     }
   }, [currentUser]);
 
@@ -112,7 +112,7 @@ function App() {
           title: payload.notification.title,
           body: payload.notification.body,
           date: new Date().toLocaleString(),
-          read: false, // Initially mark as unread
+          read: false,
         };
 
         if (currentUser) {
@@ -135,8 +135,9 @@ function App() {
 
   // Toggle notification popup and mark notifications as read
   const toggleNotificationPopup = () => {
-    setShowNotificationPopup(!showNotificationPopup);
+    setShowNotificationPopup((prev) => !prev);
 
+    // Mark notifications as read if the popup was closed and is now opening
     if (!showNotificationPopup && currentUser) {
       const db = getDatabase();
       const userId = currentUser.uid;
@@ -145,19 +146,13 @@ function App() {
         if (!notification.read) {
           const specificNotifRef = ref(db, `users/${userId}/notifications/${notification.id}`);
 
-          update(specificNotifRef, {
-            read: true,
-          })
-            .then(() => {
-              console.log(`Notification ${notification.id} marked as read`);
-            })
-            .catch((error) => {
-              console.error('Error updating notification: ', error);
-            });
+          update(specificNotifRef, { read: true })
+            .then(() => console.log(`Notification ${notification.id} marked as read`))
+            .catch((error) => console.error('Error updating notification:', error));
         }
       });
 
-      setUnreadCount(0);  // Reset unread count locally
+      setUnreadCount(0);
     }
   };
 

@@ -169,6 +169,12 @@ function Read() {
                 )}
             </div>
 
+            {newsItem.ads && (
+                <div className="ads-container">
+                    <img src={newsItem.ads} alt="Advertisement" className="ads-image" />
+                </div>
+            )}
+
             <Sheet isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
                 <Sheet.Container>
                     <Sheet.Header />

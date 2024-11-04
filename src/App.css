@@ -1,16 +1,21 @@
-/* src/App.css */
+/* Prevent vertical scrolling in the moving card container */
 .moving-card-container-wrapper {
   display: flex;
   align-items: center;
-  position: relative;
   width: 100%;
   margin: 20px 0;
   justify-content: center;
+  margin-top: 40px;
+  overflow-y: hidden; /* Disable vertical scrolling */
 }
 
-/* src/App.css */
+.moving-card-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
 
-/* Other styles remain unchanged */
 
 .moving-card {
   min-width: 280px;  /* Set a smaller minimum width for the card */
@@ -138,7 +143,7 @@
 }
 
 /* Notification Popup styling */
-/* Styling untuk lonceng notifikasi */
+/* Notification Bell Icon */
 .notification-bell {
   position: fixed;
   bottom: 20px;
@@ -148,15 +153,7 @@
   z-index: 1000;
 }
 
-/* Styling untuk angka pada ikon lonceng */
-.notification-bell {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  cursor: pointer;
-  font-size: 24px;
-}
-
+/* Notification count badge */
 .notification-count {
   background-color: red;
   color: white;
@@ -164,24 +161,32 @@
   padding: 2px 6px;
   font-size: 12px;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -5px;
+  right: -5px;
 }
 
+/* Notification popup modal */
 .notification-popup {
   position: fixed;
-  top: 60px;
+  bottom: 80px;
   right: 20px;
   background-color: white;
   border: 1px solid #ccc;
   padding: 20px;
   width: 300px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+}
+
+.notification-popup h2 {
+  margin-top: 0;
 }
 
 .notification-popup ul {
   list-style-type: none;
   padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .notification-popup li {
@@ -194,4 +199,19 @@
 
 .read {
   color: #999;
+}
+
+.notification-popup button {
+  display: block;
+  margin: 10px auto 0;
+  padding: 5px 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.notification-popup button:hover {
+  background-color: #555;
 }
