@@ -21,7 +21,7 @@ function Read() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        window.scrollTo(0, 0);  // Scroll ke atas
+        window.scrollTo(0, 0);
 
         const newsRef = ref(database, `News/${id}`);
         const startTime = Date.now();
@@ -109,6 +109,18 @@ function Read() {
         });
     };
 
+    const handleAdsClick = () => {
+        if (newsItem.waUrl) {
+            const waLink = `https://wa.me/${newsItem.waUrl}`;
+            window.open(waLink, '_blank');
+        }
+    };
+
+    const handleSubscriptionClick = () => {
+        const subscriptionLink = `https://wa.me/62895600394345`;
+        window.open(subscriptionLink, '_blank');
+    };
+
     if (isLoading) {
         return (
             <div className="loading-container">
@@ -123,6 +135,10 @@ function Read() {
         );
     }
 
+    const summaryText = newsItem.passwordContentPremium 
+        ? `${newsItem.summary.slice(0, 562)}... Baca Selengkapnya`
+        : newsItem.summary;
+
     return (
         <div className="read-page">
             <h3 style={{ textAlign: 'justify' }}>{newsItem.title}</h3>
@@ -130,13 +146,24 @@ function Read() {
             <img src={newsItem.image} alt={newsItem.title} className="news-image" />
             <p className="news-date">Published on: {new Date(newsItem.date).toLocaleString()}</p>
             <p className="news-summary">
-                {newsItem.summary.split('<br />').map((line, index) => (
+                {summaryText.split('<br />').map((line, index) => (
                     <span key={index}>
                         {line}
                         <br /><br />
                     </span>
                 ))}
             </p>
+
+            {newsItem.passwordContentPremium && (
+                <>
+                    <p className="premium-message">Baca Selengkapnya...</p>
+                    <button onClick={handleSubscriptionClick} className="subscribe-button">
+                        Berlangganan Premium - IDR 7.800/bulan
+                    </button>
+                    <p>Dapatkan lencana member Media ID</p>
+                </>
+            )}
+
             <button className="share-button" onClick={handleShareClick}>📨 Share Berita Ini</button>
 
             {newsItem.url && (
@@ -171,7 +198,12 @@ function Read() {
 
             {newsItem.ads && (
                 <div className="ads-container">
-                    <img src={newsItem.ads} alt="Advertisement" className="ads-image" />
+                    <img
+                        src={newsItem.ads}
+                        alt="Advertisement"
+                        className="ads-image"
+                        onClick={handleAdsClick}
+                    />
                 </div>
             )}
 
