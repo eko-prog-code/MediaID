@@ -19,6 +19,10 @@ function Read() {
     const [user, setUser] = useState(null);
     const [userProfile, setUserProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [passwordInput, setPasswordInput] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -57,7 +61,7 @@ function Read() {
             }
         });
 
-        const minimumLoadingTime = 5000; 
+        const minimumLoadingTime = 5000;
         const loadingTimer = setTimeout(() => {
             const elapsedTime = Date.now() - startTime;
             const remainingTime = Math.max(minimumLoadingTime - elapsedTime, 0);
@@ -121,6 +125,16 @@ function Read() {
         window.open(subscriptionLink, '_blank');
     };
 
+    const handlePasswordSubmit = () => {
+        if (passwordInput === newsItem.passwordContentPremium) {
+            toast.success('Password benar! Anda dapat membaca konten lengkap.');
+            setIsPasswordCorrect(true); // Set flag to show full content
+            setShowPasswordModal(false);
+        } else {
+            toast.error('Password salah, coba lagi.');
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="loading-container">
@@ -135,9 +149,10 @@ function Read() {
         );
     }
 
-    const summaryText = newsItem.passwordContentPremium 
-        ? `${newsItem.summary.slice(0, 562)}... Baca Selengkapnya`
-        : newsItem.summary;
+    // Display full summary if password is correct, otherwise display truncated
+    const summaryText = isPasswordCorrect || !newsItem.passwordContentPremium
+        ? newsItem.summary
+        : `${newsItem.summary.slice(0, 562)}...`;
 
     return (
         <div className="read-page">
@@ -154,9 +169,9 @@ function Read() {
                 ))}
             </p>
 
-            {newsItem.passwordContentPremium && (
+            {!isPasswordCorrect && newsItem.passwordContentPremium && (
                 <>
-                    <p className="premium-message">Baca Selengkapnya...</p>
+                    <button className="premium-message" onClick={() => setShowPasswordModal(true)}>Baca Selengkapnya...</button>
                     <button onClick={handleSubscriptionClick} className="subscribe-button">
                         Berlangganan Premium - IDR 7.800/bulan
                     </button>
@@ -207,6 +222,29 @@ function Read() {
                 </div>
             )}
 
+            {showPasswordModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2>Masukkan Password</h2>
+                        <div className="password-input-container">
+                            <input
+                                style={{ marginBottom: '100px' }} // Add margin to move the input down
+                                type={showPassword ? 'text' : 'password'}
+                                value={passwordInput}
+                                onChange={(e) => setPasswordInput(e.target.value)}
+                                placeholder="Masukkan password"
+                            />
+
+                            <button onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? '🙉' : '🙈'}
+                            </button>
+                        </div>
+                        <button onClick={handlePasswordSubmit}>Submit</button>
+                        <button onClick={() => setShowPasswordModal(false)}>Batal</button>
+                    </div>
+                </div>
+            )}
+
             <Sheet isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
                 <Sheet.Container>
                     <Sheet.Header />
@@ -216,9 +254,9 @@ function Read() {
                             <textarea
                                 value={commentText}
                                 onChange={(e) => setCommentText(e.target.value)}
-                                placeholder="Tulis komentar..."
+                                placeholder="Tulis komentar Anda di sini..."
                             />
-                            <button onClick={handleCommentSubmit}>Kirim</button>
+                            <button onClick={handleCommentSubmit}>Submit</button>
                         </div>
                     </Sheet.Content>
                 </Sheet.Container>
